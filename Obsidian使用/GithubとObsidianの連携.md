@@ -30,6 +30,44 @@ GithubとObsidianを連系することにより、今までのデータのバッ
 - VaultのルートディレクトリをそのままGitリポジトリにする必要があります。
 - PC版の方法ではアクセストークンは不要です。
 
+### Gitの「保存」について：更新と蓄積
+
+Gitにおける「保存」は、単にファイルを上書きする「更新」だけでなく、変更の履歴を積み重ねる「蓄積」の両方の側面を持っています。
+
+*   **「更新」の側面:** あなたがObsidianでノートを編集し、その変更をGitで「コミット」する時、それはそのノートの**最新の状態を「更新」している**と捉えることができます。つまり、「この時点でのノートはこうなりました」という新しいバージョンを記録する行為です。
+*   **「蓄積」の側面:** Gitは、単に古いバージョンを新しいバージョンで上書きするわけではありません。代わりに、**変更点（差分）だけを非常に効率的に記録**し、変更の履歴を「蓄積」していきます。これにより、いつでも過去のどの時点のノートの状態にも戻したり、変更内容を比較したりすることが可能になります。テキストファイルの場合、この履歴の蓄積がディスク容量を圧迫することはほとんどありません。
+
+### 変更をGitHubに保存する方法
+
+Obsidianのノートの変更をGitHubに保存する方法は、主に以下の2つがあります。
+
+1.  **Obsidian Gitプラグインによる自動保存**
+    *   **仕組み:** プラグインが設定された間隔（例: 10分ごと）で、ObsidianのVault内の変更を自動的に検知し、Gitリポジトリにコミットし、GitHubにプッシュします。
+    *   **利点:** あなたが意識しなくても、常に最新のノートがGitHubにバックアップされます。
+    *   **設定:** ObsidianのGitプラグインの設定で、「`Auto commit-and-sync interval(minutes)`」と「`Auto pull interval(minutes)`」が0以外の数値に設定されていることを確認してください。
+
+2.  **手動でのGitコマンドによる保存**
+    特定の変更をすぐにGitHubに保存したい場合や、自動保存の対象外のファイルを扱いたい場合に利用します。
+
+    *   **1. 変更をステージングする (`git add`)**
+        どのファイルをコミットの対象にするかをGitに伝えます。
+        ```bash
+        git add .obsidian/workspace.json
+        # または、すべての変更をステージングする場合
+        # git add .
+        ```
+    *   **2. 変更をコミットする (`git commit`)**
+        ステージングした変更をローカルリポジトリの履歴に記録します。`-m` の後にコミットメッセージを記述します。
+        ```bash
+        git commit -m "Update Obsidian workspace settings"
+        ```
+    *   **3. 変更をGitHubにプッシュする (`git push`)**
+        ローカルリポジトリにコミットした変更を、GitHub上のリモートリポジトリにアップロードします。
+        ```bash
+        git push origin master
+        ```
+        （`origin` はリモートリポジトリの名前、`master` はブランチ名です。）
+
 ### [](https://zenn.dev/ofurousagi/articles/250801_obsidian-github-sync#1.-vault%EF%BC%88%E4%BF%9D%E7%AE%A1%E5%BA%AB%EF%BC%89%E3%82%92%E4%BD%9C%E6%88%90)1. Vault（保管庫）を作成
 
 !
@@ -51,16 +89,20 @@ Valut
 ここで設定したリポジトリ名と、ObsidianのVault名は一致している方が管理しやすいため、今回は`my-obsidian-notes`としました。
 
 ```
-https://github.com/username/my-obsidian-notes.git
+https://github.com/ryusei-lab/obsidian.git
 ```
 
 
-### [](https://zenn.dev/ofurousagi/articles/250801_obsidian-github-sync#3.-%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%AB%E3%81%AE%E4%BF%9D%E7%AE%A1%E5%BA%AB%E3%83%87%E3%82%A3%E3%83%AC%E3%82%AF%E3%83%88%E3%83%AA%E3%82%92%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA%E5%8C%96)3. ローカルの保管庫ディレクトリをリポジトリ化
+### [](https://zenn.dev/ofurousagi/articles/250801_obsidian-github-sync#3.-%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%AB%E3%81%AE%E4%BF%9D%E7%AE%A1%E5%BA%AB%E3%83%87%E3%82%A3%E3%83%AC%E3%82%AF%E3%83%88%E3%83%AA%E3%82%92%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA%E5%8C%96)
+3. ローカルの保管庫ディレクトリをリポジトリ化
 
 ```
+# Mac/Linuxの場合
 cd /Users/username/vault/my-obsidian-notes/
+# Windowsの場合 (例)
+cd C:\Users\ryuse\OneDrive\デスクトップ\オブシディアン
 git init
-git remote add origin https://github.com/username/obsidian-notes.git
+git remote add origin https://github.com/ryusei-lab/obsidian.git
 ```
 
 ### [](https://zenn.dev/ofurousagi/articles/250801_obsidian-github-sync#4.-%E3%82%B3%E3%83%9F%E3%83%83%E3%83%88%26%E3%83%97%E3%83%83%E3%82%B7%E3%83%A5)4. コミット&プッシュ
@@ -68,8 +110,11 @@ git remote add origin https://github.com/username/obsidian-notes.git
 ```
 git add .
 git commit -m "Initial commit"
-git push -u origin main
+git push -u origin master
 ```
+**補足: ブランチ名について (`main` vs `master`)**
+GitHubで新しくリポジトリを作成すると、デフォルトのブランチ名が `main` になっていることが多いですが、既存のリポジトリや古い設定では `master` が使われていることがあります。
+もし `git push -u origin main` でエラーが出る場合は、`git branch` コマンドで現在のブランチ名を確認し、そのブランチ名（例: `master`）を使ってプッシュしてください。
 
 ### [](https://zenn.dev/ofurousagi/articles/250801_obsidian-github-sync#5.-%E3%82%B3%E3%83%9F%E3%83%A5%E3%83%8B%E3%83%86%E3%82%A3%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%81%8B%E3%82%89git%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB)5. コミュニティプラグインからGitをインストール
 
@@ -98,19 +143,25 @@ git push -u origin main
 
 ### [](https://zenn.dev/ofurousagi/articles/250801_obsidian-github-sync#7.-%E3%83%91%E3%82%B9%E3%82%92%E9%80%9A%E3%81%99)7. パスを通す
 
-1. **`which`でコマンドのパスを確認**
+1. **Git実行ファイルのパスを確認**
 
-```
-which git
-/usr/local/bin/git
-```
-
+    Mac/Linuxの場合:
+    ```
+    which git
+    /usr/local/bin/git
+    ```
+    Windowsの場合:
+    ```
+    where git
+    C:\Program Files\Git\cmd\git.exe  # 例
+    ```
+    Windowsでは `which` コマンドは使えません。代わりに `where` コマンドを使用してください。
 
 2. **Gitプラグインにパスを記載**  
     ![Gitプラグインにパスを記載](https://static.zenn.studio/user-upload/deployed-images/65bec777081d0a2df84d8376.png?sha=6b562fe732966df9a1fc2d615f83e459e92d9622)
 
-- ディレクトリを追加する必要があるため、`/usr/local/bin/git`の`git`の部分は不要
-- `/usr/bin`は保険として追加（なくてもOK）
+    *   ObsidianのGitプラグインには、`git.exe` が存在するディレクトリのパス（例: `C:\Program Files\Git\cmd`）を記載するか、`git.exe` へのフルパス（例: `C:\Program Files\Git\cmd\git.exe`）を記載します。
+    *   `/usr/bin`は保険として追加（なくてもOK）
 
 ### [](https://zenn.dev/ofurousagi/articles/250801_obsidian-github-sync#8.-%E3%82%B3%E3%83%9F%E3%83%83%E3%83%88%26%E3%83%97%E3%83%83%E3%82%B7%E3%83%A5%E3%81%AE%E7%A2%BA%E8%AA%8D)8. コミット&プッシュの確認
 
