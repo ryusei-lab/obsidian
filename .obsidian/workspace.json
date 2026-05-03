@@ -204,6 +204,18 @@
               "icon": "calendar-with-checkmark",
               "title": "Calendar"
             }
+          },
+          {
+            "id": "ff875521fc92aaf9",
+            "type": "leaf",
+            "state": {
+              "type": "file-properties",
+              "state": {
+                "file": "無題のカンバン 1.md"
+              },
+              "icon": "lucide-info",
+              "title": "無題のカンバン 1のファイルプロパティ"
+            }
           }
         ],
         "currentTab": 5
@@ -257,7 +269,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 421.5
+    "width": 465.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -269,12 +282,20 @@
       "command-palette:コマンドパレットを開く": false,
       "bases:新規ベースを作成": false,
       "obsidian-git:Open Git source control": false,
-      "terminal:Open terminal": false
+      "terminal:Open terminal": false,
+      "obsidian-kanban:カンバンボードを新規作成": false
     }
   },
-  "active": "a25ddd2d033d4e26",
+  "active": "8e5ee84a2e80268c",
   "lastOpenFiles": [
+    "Pasted image 20260503022408.png",
     "Obsidian使用/GithubとObsidianの連携.md",
+    "無題のカンバン 1.md",
+    "無題のカンバン.md",
+    "＃ベンチマーク.md",
+    "単語.md",
+    "単語_カード.md",
+    "kok.md",
     "Obsidian使用"
   ]
 }
